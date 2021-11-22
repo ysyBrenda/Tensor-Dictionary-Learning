@@ -27,14 +27,14 @@
 
 %--------------------------------------------------------------------------
 function    [D,B,fun]    =  Nonnegative_DL( X, par )
-rng('default');%Add:用默认的随机数环境，每次生成的随机数相同。
-Q            =    randperm( size(X,2) );%随机数列 以X的列数为参数
-D            =    X(:, Q(1:par.K));%随机选取X的前K列
-D            =    D./repmat((sqrt(sum(D.^2))+eps), size(D,1), 1);%标准化
+rng('default');
+Q            =    randperm( size(X,2) );
+D            =    X(:, Q(1:par.K));列
+D            =    D./repmat((sqrt(sum(D.^2))+eps), size(D,1), 1);
 Iter         =   10;  
 X_s          =    X;
 for  t   =  1 : Iter
-    % Nonnegative Sparse coding         %非负稀疏编码
+    % Nonnegative Sparse coding      
     [B,mu, fun(t)]    =    Nonnegative_SC( D, X_s, par );        
     b     =    sum(B.^2, 2);
     R     =    X - D*B;   

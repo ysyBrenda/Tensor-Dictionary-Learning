@@ -1,10 +1,9 @@
 function [EX,mult] = JointCubes( X_blocks,Y,paraCube,Lambda,mu )
-%函数作用：输入块blocks，Y原始数据，参数λ，关于块的参数params==>输出（与原始数据Y一起）平均后的EX
-%其中，λ控制Y的影响大小。即实现Image denoising via learned dictionaries and sparse
-%representation中的公式6.2
-%Lambda表示参数λ；X是blocks，所有的块，(8*8*39*552)
-%params是块的参数，包括block_num 块的个数;overlap_sz 块重叠大小;block_sz 块大小
-%mu 表示拉普拉斯算子的系数  如果没有梯度项，mu=0；
+% input X(ALL blocks)，Y(original data)，Lambda (parameter  λ),params(parametersabout blocks)
+%==>output (together with the original data Y) averaged EX
+%where λ controls the effect of Y.
+%params:including block_num (number of blocks);overlap_sz (block overlap size);block_sz(block size)
+%mu indicates the coefficients of the Laplace operator. If there is no gradient term, mu=0.
 
 block_num= paraCube.block_num;
 Is_addrow= paraCube.Is_addrow;
@@ -14,26 +13,26 @@ overlap= paraCube.overlap;
 
 sz=size(Y); 
 number=reshape(1:(sz(1)*sz(2)),sz(1),sz(2));
-range=find(~Y(:,:,1));%边界 0 的位置index
-mult = zeros(size(Y));%mult记录元素叠加次数
+range=find(~Y(:,:,1));
+mult = zeros(size(Y));
 EX0  = zeros(size(Y));
 idx=0;
 RTR=zeros(sz(1)*sz(2));
 for j=1:block_num(2)
     for i= 1:block_num(1)
-        ii = 1 + (i - 1)*(patchsize-overlap);%ii和jj是cube左上角的位置
+        ii = 1 + (i - 1)*(patchsize-overlap);
         jj = 1 + (j - 1)*(patchsize-overlap);
         
-        if Is_addrow==1 && i==block_num(1)     %如果要单独采cube并且到了边缘位置，则更新ii，jj的位置
+        if Is_addrow==1 && i==block_num(1)  
             ii= sz(1)-patchsize+1;
         end
         if Is_addcol==1 && j==block_num(2)
             jj=sz(2)-patchsize+1;
         end
-        is_out=ismember(number(ii:ii+patchsize-1, jj:jj+patchsize-1),range);%超出边界，isout返回1
-        %is_out全为0才执行,取cube
+        is_out=ismember(number(ii:ii+patchsize-1, jj:jj+patchsize-1),range);
+       
         if ~sum(sum(is_out))
-            %idx = (j-1)*block_num(1) + i;%第几个
+            %idx = (j-1)*block_num(1) + i;
             idx=idx+1;
             % blocks(:,:,:,idx)=img(ii:ii+patchsize-1, jj:jj+patchsize-1, :);
             mult(ii:ii+patchsize-1, jj:jj+patchsize-1, :)...
@@ -42,7 +41,7 @@ for j=1:block_num(2)
                 =EX0(ii:ii+patchsize-1, jj:jj+patchsize-1,:) +X_blocks(:,:,:,idx);
 %             Mask=zeros(sz(1),sz(2));
 %             Mask(ii:ii+patchsize-1, jj:jj+patchsize-1)=1;
-%             R=diag(Mask(:));% 位置（i，j）patch的提取矩阵R
+%             R=diag(Mask(:));
 %             RTR=RTR+(R')*R;
         end
     end

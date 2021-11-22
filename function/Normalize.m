@@ -1,5 +1,5 @@
 function A_norm = Normalize(A)
-%NORMALIZE 输入三维的A，进行标准化，输出标准化后的A_norm
+%NORMALIZE input the three-dimensional tensor A, normalize it, and output the normalized A_norm
 if numel(size(A))==2
     istensor=0;
     ss=A;

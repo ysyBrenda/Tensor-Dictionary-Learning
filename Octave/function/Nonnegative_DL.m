@@ -27,7 +27,7 @@
 
 %--------------------------------------------------------------------------
 function    [D,B]    =  Nonnegative_DL( X, par )
-rng('default');
+
 Q            =    randperm( size(X,2) );
 D            =    X(:, Q(1:par.K)); 
 D            =    D./repmat((sqrt(sum(D.^2))+eps), size(D,1), 1);

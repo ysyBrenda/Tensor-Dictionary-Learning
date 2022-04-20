@@ -1,4 +1,4 @@
-function  [A ,DK]  =  My_sparse_tucker( SpatialDictionary1,SpatialDictionary2,D3,X,par )
+function  [A ,DK]  =  sparse_tucker( SpatialDictionary1,SpatialDictionary2,D3,X,par )
 %input：2 spatial dictionaries and 1 elemental dictionary：SpatialDictionary1,SpatialDictionary2,D3
 % element dictionary is a matrix and the spatial dictionaries are tensor.
 K=size(SpatialDictionary1,3);

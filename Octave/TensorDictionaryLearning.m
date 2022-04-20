@@ -97,7 +97,7 @@ N_Au=numel(Au_Err);
 yi=Err(NIndex); %Negative sample
 y_random=[];
 for i=1:100
-    rng(i);
+ ##   rng(i);
     y_random(:,i)=yi(randperm(numel(yi),N_Au))';
     [Auc(i) Zauc(i)]=computeAUC(Au_Err,y_random(:,i));
 end
